@@ -1,0 +1,12 @@
+__pycache__/
+**/__pycache__/
+*.pyc
+.env
+.env.example
+persepolis.db
+static/uploads/*
+!static/uploads/.gitkeep
+.mypy_cache/
+*.log
+Dockerfile
+.dockerignore

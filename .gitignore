@@ -1,0 +1,22 @@
+backend/.env
+backend/persepolis.db
+backend/static/uploads/*
+!backend/static/uploads/.gitkeep
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/routers/__pycache__/
+**/__pycache__/
+*.pyc
+venv/
+.venv/
+.mypy_cache/
+*.log
+.DS_Store
+
+# Let's Encrypt certs/private keys — generated on the VPS by scripts/init-letsencrypt.sh,
+# never belong in version control.
+certbot/
+
+# Claude Code's local (machine-specific) settings — .claude/settings.json,
+# if one exists, is the shared/project-level file and is fine to commit.
+.claude/settings.local.json

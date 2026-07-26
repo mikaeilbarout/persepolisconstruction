@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Persepolis Construction</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{ padding-bottom:0; }
+  .admin-wrap{ max-width:1100px; margin:0 auto; padding:60px 6vw 100px; }
+  .admin-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; flex-wrap:wrap; gap:16px; }
+  .admin-tabs{ display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; }
+  .admin-tabs button{
+    background:transparent; border:1px solid rgba(201,183,156,0.25); color:var(--ash);
+    padding:10px 18px; border-radius:20px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .admin-tabs button.active{ background:var(--red); color:var(--ivory); border-color:var(--red); }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+  .admin-card{ border:1px solid rgba(201,183,156,0.15); border-radius:4px; padding:24px; margin-bottom:16px; background:var(--black-2); }
+  .admin-card .row{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+  .admin-card h3{ font-size:18px; margin-bottom:6px; }
+  .admin-card .meta{ font-size:12.5px; color:var(--ash); }
+  .admin-card p{ font-size:14px; color:var(--ash); margin-top:8px; max-width:560px; }
+  .admin-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn-sm{ font-size:12.5px; padding:8px 14px; border-radius:2px; border:1px solid rgba(201,183,156,0.3); cursor:pointer; background:transparent; color:var(--ivory); font-family:'Inter',sans-serif; }
+  .btn-sm:hover{ border-color:var(--red-bright); }
+  .btn-sm.danger:hover{ border-color:#c0392b; color:#e77; }
+  .status-pill{ font-size:11px; text-transform:uppercase; padding:4px 10px; border-radius:20px; letter-spacing:.04em; }
+  .status-new{ background:rgba(178,58,47,0.2); color:var(--red-bright); }
+  .status-contacted{ background:rgba(201,183,156,0.2); color:var(--sand); }
+  .status-quoted, .status-won{ background:rgba(120,180,120,0.2); color:#8fcf8f; }
+  .status-lost{ background:rgba(120,120,120,0.2); color:#999; }
+  .login-box{ max-width:360px; margin:120px auto; text-align:center; }
+  .login-box h1{ font-size:28px; margin-bottom:24px; }
+  .login-box input{ width:100%; margin-bottom:14px; padding:12px; background:var(--black-2); border:1px solid rgba(201,183,156,0.3); color:var(--ivory); border-radius:2px; font-family:'Inter',sans-serif; }
+  .login-box button{ width:100%; padding:13px; background:var(--red); border:none; color:var(--ivory); border-radius:2px; cursor:pointer; font-size:14px; }
+  .login-error{ color:var(--red-bright); font-size:13px; margin-top:10px; min-height:18px; }
+  .add-form{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:30px; }
+  .add-form textarea, .add-form input, .add-form select{
+    background:var(--black-2); border:1px solid rgba(201,183,156,0.25); color:var(--ivory); padding:10px; border-radius:2px; font-family:'Inter',sans-serif; font-size:14px;
+  }
+  .add-form .full{ grid-column:1/-1; }
+  .add-form button{ grid-column:1/-1; justify-self:start; }
+  select.status-select{ background:var(--black); color:var(--ivory); border:1px solid rgba(201,183,156,0.3); padding:6px 10px; border-radius:2px; font-size:12.5px; }
+  .content-section{ margin-bottom:36px; }
+  .content-section-title{
+    font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--sand);
+    padding-bottom:10px; margin-bottom:16px; border-bottom:1px solid rgba(201,183,156,0.2);
+  }
+  .faq-pair{ border:1px solid rgba(201,183,156,0.12); border-radius:6px; padding:16px 16px 4px; margin-bottom:16px; }
+  .faq-pair-num{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--red-bright); margin-bottom:10px; }
+  .content-field{ border:1px solid rgba(201,183,156,0.15); border-radius:4px; padding:20px; margin-bottom:14px; background:var(--black-2); }
+  .content-field label{ display:block; font-size:12.5px; color:var(--red-bright); text-transform:uppercase; letter-spacing:.04em; margin-bottom:10px; }
+  .content-field textarea, .content-field input{
+    width:100%; background:var(--black); border:1px solid rgba(201,183,156,0.25); color:var(--ivory);
+    padding:10px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:13px; margin-bottom:10px;
+  }
+  .content-field textarea{ min-height:70px; resize:vertical; }
+  .content-field .save-row{ display:flex; align-items:center; gap:12px; }
+  .content-field .saved-msg{ font-size:12px; color:var(--sand); opacity:0; transition:opacity .3s; }
+  @media (max-width:700px){ .add-form{ grid-template-columns:1fr; } }
+  .upload-label-select{ background:var(--black); color:var(--ivory); border:1px solid rgba(201,183,156,0.3); padding:8px 10px; border-radius:2px; font-size:12.5px; font-family:'Inter',sans-serif; }
+  .photo-strip{ display:flex; gap:14px; flex-wrap:wrap; margin-top:16px; }
+  .photo-thumb{ position:relative; width:96px; display:flex; flex-direction:column; align-items:center; gap:6px;
+    padding:6px; border-radius:12px; border:2px solid transparent; transition:transform .2s ease; }
+  .photo-thumb:hover{ transform:translateY(-2px); }
+  .photo-thumb img{ width:84px; height:84px; object-fit:cover; border-radius:9px; }
+  .photo-thumb.label-before{ border-color:var(--red-bright); }
+  .photo-thumb.label-after{ border-color:#8fcf8f; }
+  .photo-thumb.label-gallery{ border-color:rgba(201,183,156,0.25); }
+  .photo-remove{
+    position:absolute; top:-2px; right:-2px; width:20px; height:20px; border-radius:50%;
+    background:var(--red); color:var(--ivory); border:none; cursor:pointer; font-size:14px; line-height:1;
+  }
+  .photo-remove:hover{ background:var(--red-bright); }
+  .photo-label-select{ width:100%; background:var(--black-2); color:var(--ivory); border:1px solid rgba(201,183,156,0.25);
+    padding:3px 4px; border-radius:2px; font-size:11px; font-family:'Inter',sans-serif; }
+  .link-btn{ background:none; border:none; color:var(--ash); font-size:13px; cursor:pointer; text-decoration:underline;
+    font-family:'Inter',sans-serif; margin-top:6px; }
+  .link-btn:hover{ color:var(--red-bright); }
+  .account-section{ border:1px solid rgba(201,183,156,0.15); border-radius:4px; padding:24px; margin-bottom:20px;
+    background:var(--black-2); max-width:420px; }
+  .account-section h3{ font-size:15px; margin-bottom:16px; }
+  .account-section input{ width:100%; margin-bottom:12px; padding:10px; background:var(--black); border:1px solid rgba(201,183,156,0.3);
+    color:var(--ivory); border-radius:2px; font-family:'Inter',sans-serif; }
+  .account-msg{ font-size:12.5px; margin-top:8px; min-height:16px; }
+  .account-msg.ok{ color:var(--sand); }
+  .account-msg.err{ color:var(--red-bright); }
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-box">
+  <h1 class="logo-mark">PERSEPOLIS<span style="color:var(--red-bright)">·</span>ADMIN</h1>
+  <input type="text" id="login-username" placeholder="Username" autocomplete="username">
+  <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+  <button id="login-btn">Sign in</button>
+  <div class="login-error" id="login-error"></div>
+  <button type="button" class="link-btn" id="show-forgot-btn">Forgot password?</button>
+</div>
+
+<div id="forgot-screen" class="login-box" style="display:none;">
+  <h1 class="logo-mark">PERSEPOLIS<span style="color:var(--red-bright)">·</span>ADMIN</h1>
+  <p style="color:var(--ash); font-size:13.5px; margin-bottom:18px;">Enter your username — if a recovery email is set for this account, we'll send a reset link.</p>
+  <input type="text" id="forgot-username" placeholder="Username" autocomplete="username">
+  <button id="forgot-btn">Send reset link</button>
+  <div class="login-error" id="forgot-message"></div>
+  <button type="button" class="link-btn" id="back-to-login-btn">Back to sign in</button>
+</div>
+
+<div id="reset-screen" class="login-box" style="display:none;">
+  <h1 class="logo-mark">PERSEPOLIS<span style="color:var(--red-bright)">·</span>ADMIN</h1>
+  <p style="color:var(--ash); font-size:13.5px; margin-bottom:18px;">Set a new password.</p>
+  <input type="password" id="reset-new-password" placeholder="New password" autocomplete="new-password">
+  <button id="reset-btn">Set new password</button>
+  <div class="login-error" id="reset-message"></div>
+</div>
+
+<div id="admin-app" class="admin-wrap" style="display:none;">
+  <div class="admin-header">
+    <div class="logo-mark" style="font-size:18px;">PERSEPOLIS<span style="color:var(--red-bright)">·</span>ADMIN</div>
+    <button class="btn-sm" id="logout-btn">Log out</button>
+  </div>
+
+  <div class="admin-tabs">
+    <button data-panel="quotes" class="active">Quote Requests</button>
+    <button data-panel="projects">Projects</button>
+    <button data-panel="testimonials">Testimonials</button>
+    <button data-panel="content">Site Text</button>
+    <button data-panel="account">Account</button>
+  </div>
+
+  <div id="panel-quotes" class="panel active">
+    <div id="quotes-list"></div>
+  </div>
+
+  <div id="panel-projects" class="panel">
+    <form id="project-form" class="add-form">
+      <input type="text" name="title" placeholder="Project title" required>
+      <select name="category" required>
+        <option value="renovation">Renovation</option>
+        <option value="extension">Extension</option>
+        <option value="new_build">New Build</option>
+        <option value="structural">Structural</option>
+        <option value="exterior">Exterior</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+      <input type="text" name="location" placeholder="Location (e.g. Kingston upon Thames)">
+      <input type="text" name="description" placeholder="Short description">
+      <button type="submit" class="btn-sm">Add Project</button>
+    </form>
+    <div id="projects-list"></div>
+  </div>
+
+  <div id="panel-testimonials" class="panel">
+    <form id="testimonial-form" class="add-form">
+      <input type="text" name="name" placeholder="Client name" required>
+      <input type="text" name="location" placeholder="Location">
+      <select name="rating">
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★☆</option>
+        <option value="3">★★★☆☆</option>
+      </select>
+      <textarea name="text" class="full" placeholder="Testimonial text" required></textarea>
+      <button type="submit" class="btn-sm">Add Testimonial</button>
+    </form>
+    <div id="testimonials-list"></div>
+  </div>
+
+  <div id="panel-content" class="panel">
+    <p style="color:var(--ash); font-size:13.5px; margin-bottom:24px; max-width:600px;">
+      Edit the wording used across the site. Changes appear next time each page loads —
+      no code or redeploy needed. Fields marked "HTML allowed" accept simple tags like
+      <code>&lt;em&gt;</code> or <code>&lt;br&gt;</code>.
+    </p>
+    <div id="content-list"></div>
+  </div>
+
+  <div id="panel-account" class="panel">
+    <div class="account-section">
+      <h3>Notification email</h3>
+      <p style="color:var(--ash); font-size:13px; margin-bottom:14px;">
+        Used for password-recovery links and for new quote/review alerts. Leave blank to disable both.
+      </p>
+      <input type="email" id="notify-email-input" placeholder="you@example.com">
+      <button class="btn-sm" id="save-email-btn">Save email</button>
+      <div class="account-msg" id="email-msg"></div>
+    </div>
+
+    <div class="account-section">
+      <h3>Change password</h3>
+      <input type="password" id="current-password-input" placeholder="Current password" autocomplete="current-password">
+      <input type="password" id="new-password-input" placeholder="New password" autocomplete="new-password">
+      <input type="password" id="confirm-password-input" placeholder="Confirm new password" autocomplete="new-password">
+      <button class="btn-sm" id="save-password-btn">Change password</button>
+      <div class="account-msg" id="password-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
