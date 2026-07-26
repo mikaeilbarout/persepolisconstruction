@@ -103,7 +103,7 @@ function escapeHtml(value) {
       <button class="lightbox-nav prev" aria-label="Previous photo">&#8249;</button>
       <div class="lightbox-box">
         <div class="lightbox-head">
-          <h4 id="lb-title"></h4>
+          <h3 id="lb-title"></h3>
           <button class="lightbox-close" aria-label="Close">&times;</button>
         </div>
         <div class="lightbox-img-wrap">
@@ -193,7 +193,7 @@ function escapeHtml(value) {
       <div class="project-card ${before && after ? 'has-split' : ''}" data-index="${i}">
         ${cover}
         ${p.images.length > 1 ? `<div class="pc-count">${p.images.length} photos</div>` : ''}
-        <div class="frame"><h4>${escapeHtml(p.title)}</h4></div>
+        <div class="frame"><h3>${escapeHtml(p.title)}</h3></div>
       </div>
     `;
     }).join('');
