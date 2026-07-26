@@ -172,7 +172,7 @@ async function loadQuotes() {
             <p>${escapeHtml(q.details) || '—'}</p>
           </div>
           <div class="admin-actions">
-            <select class="status-select" data-quote-id="${q.id}">
+            <select class="status-select" data-quote-id="${q.id}" aria-label="Quote status">
               ${['new', 'contacted', 'quoted', 'won', 'lost'].map((s) => `<option value="${s}" ${s === q.status ? 'selected' : ''}>${s}</option>`).join('')}
             </select>
             <button class="btn-sm danger" data-delete-quote="${q.id}">Delete</button>
@@ -224,7 +224,7 @@ async function loadProjects() {
             <p>${escapeHtml(p.description) || '—'}</p>
           </div>
           <div class="admin-actions">
-            <select class="upload-label-select" data-upload-label="${p.id}">
+            <select class="upload-label-select" data-upload-label="${p.id}" aria-label="Photo label for upload">
               ${LABELS.map((l) => `<option value="${l}">Add as: ${LABEL_TEXT[l]}</option>`).join('')}
             </select>
             <label class="btn-sm" style="cursor:pointer;">
@@ -243,7 +243,7 @@ async function loadProjects() {
               <div class="photo-thumb label-${img.label}">
                 <img src="${API_BASE}${img.image_path}" alt="">
                 <button class="photo-remove" data-delete-image="${p.id}" data-image-id="${img.id}" aria-label="Remove photo">&times;</button>
-                <select class="photo-label-select" data-relabel-project="${p.id}" data-relabel-image="${img.id}">
+                <select class="photo-label-select" data-relabel-project="${p.id}" data-relabel-image="${img.id}" aria-label="Photo label">
                   ${LABELS.map((l) => `<option value="${l}" ${l === img.label ? 'selected' : ''}>${LABEL_TEXT[l]}</option>`).join('')}
                 </select>
               </div>
