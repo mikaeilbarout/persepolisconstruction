@@ -25,7 +25,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
+      # Published as 8444 (not 443) per an Origin Rule configured on the
+      # Cloudflare side to route to this port — nginx itself still listens
+      # on 443 inside the container (right side of the mapping), so
+      # nginx.conf doesn't need to change at all.
+      - "8444:443"
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
       # Mount the directory, not the single file — a single-file bind mount

@@ -14,9 +14,11 @@ fi
 echo "### Allowing SSH BEFORE enabling the firewall (so you don't lock yourself out) ..."
 ufw allow OpenSSH
 
-echo "### Allowing HTTP (80) and HTTPS (443) for the site ..."
+echo "### Allowing HTTP (80) and HTTPS (8444) for the site ..."
 ufw allow 80/tcp
-ufw allow 443/tcp
+# nginx is published on 8444, not 443 — see the comment on that port mapping
+# in docker-compose.yml for why (a Cloudflare Origin Rule routes here).
+ufw allow 8444/tcp
 
 echo "### Setting default policy: deny incoming, allow outgoing ..."
 ufw default deny incoming
